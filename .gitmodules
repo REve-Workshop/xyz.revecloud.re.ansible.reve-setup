@@ -1,0 +1,15 @@
+[submodule "roles/bashmount"]
+	path = roles/bashmount
+	url = https://github.com/montaropdf/ansible-bashmount-role.git
+[submodule "roles/mu"]
+	path = roles/mu
+	url = https://github.com/montaropdf/ansible-mu-role.git
+[submodule "roles/stumpwm"]
+	path = roles/stumpwm
+	url = https://github.com/montaropdf/ansible-stumpwm-role.git
+[submodule "roles/librem-coreboot"]
+	path = roles/librem-coreboot
+	url = https://github.com/montaropdf/ansible-librem-coreboot-role.git
+[submodule "roles/quicklisp"]
+	path = roles/quicklisp
+	url = https://github.com/montaropdf/quicklisp-ansible-role.git
