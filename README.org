@@ -6,12 +6,12 @@
   :END:
   These playbooks allows to setup a machine, following my standard.
 
-  They are design so they can also be used individually:
-  - to keep a machine up to date with configuration changes -
+  They are designed so they can also be used individually:
+  - to keep a machine up to date with configuration changes, use
     =deploy-config.yml=.
   - to keep a machine up to date with new version of applications not
-    managed by package managers - =host-setup.yml=.
-  - when new users must be create on a machine - =user-setup.yml=.
+    managed by package managers, =host-setup.yml=.
+  - when new users must be create on a machine, =user-setup.yml=.
 * Usage
   :PROPERTIES:
   :ID:       b4822be3-3f89-42d2-ae6e-230f9e0a1be6
@@ -187,3 +187,9 @@
    2. If deployment of the configuration is requested:
       1. Clean the user directory of any existing configuration for the application
       2. Deploy the last version of the configuration available
+* Author
+
++ Roland Everaert
+* Copyright
+
+Copyright (c) 2020 Roland Everaert
