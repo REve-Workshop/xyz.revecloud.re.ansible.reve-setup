@@ -1,11 +1,11 @@
-# - name: Include common variables
-#   include_vars:
-#     file: ../../common/vars/main.yml
+- name: Include common variables
+  include_vars:
+    file: ../../common/vars/main.yml
 - name: Set git user name
   git_config:
     name: user.name
     scope: global
-    value: '{{ user_data.user_name }}'
+    value: '{{ user_data.name }}'
   when: "'development' in user_data.profiles"
 - name: Set git user email address
   git_config:

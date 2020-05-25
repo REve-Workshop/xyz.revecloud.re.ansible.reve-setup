@@ -6,7 +6,7 @@
   include_role:
     name: manage-user
     tasks_from: user-init.yml
-- name: Configure git environment for the root user
+- name: Configure git environment for the builder user
   include_role:
     name: manage-user
     tasks_from: git.yml

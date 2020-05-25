@@ -4,6 +4,10 @@
 # The playbook ensure that all dependencies are installed before
 # compiling the application.
 #
+# StumpWM is installed and removed with this playbook instead of the
+# role desk-env.yml, because, this application is compiled by the
+# builder user.
+#
 - hosts: all
   gather_facts: False
   tasks:
@@ -11,18 +15,56 @@
       include_vars:
         file: "{{ users_dir }}/builder.yml"
         name: user_data
-    - name: Ensure QuickLisp is installed
-      include_role:
-        name: quicklisp
-      vars:
-        working_directory: "{{ git_3rdparty }}/{{ applications['common_lisp']['ql_repo_dir'] }}"
-      when: applications['common_lisp'] is defined
-    - name: Deploy StumpWM
-      include_role:
-        name: stumpwm
-      vars:
-        repository: "{{ applications['stumpwm']['repo'] }}"
-        repository_contrib: "{{ applications['stumpwm']['repo_contrib'] }}"
-        working_dir: "{{ git_3rdparty }}/{{ applications['stumpwm']['dir'] }}"
-        working_dir_contrib: "{{ git_3rdparty }}/{{ applications['stumpwm']['dir_contrib'] }}"
-      when: applications['stumpwm'] is defined
+
+    # Block to install StumpWM -----------------------------
+    - name: Install StumpWM
+      block:
+      - name: Install Basic Desktop environment
+        shell: dnf -y groupinstall basic-desktop-environment
+      - name: Ensure QuickLisp is installed
+        include_role:
+          name: quicklisp
+        vars:
+          working_directory: "{{ git_3rdparty }}/{{ applications['common_lisp']['ql_repo_dir'] }}"
+        when: applications['common_lisp'] is defined
+      - name: Deploy StumpWM
+        include_role:
+          name: stumpwm
+        vars:
+          repository: "{{ applications['stumpwm']['repo'] }}"
+          repository_contrib: "{{ applications['stumpwm']['repo_contrib'] }}"
+          working_dir: "{{ git_3rdparty }}/{{ applications['stumpwm']['dir'] }}"
+          working_dir_contrib: "{{ git_3rdparty }}/{{ applications['stumpwm']['dir_contrib'] }}"
+        when: applications['stumpwm'] is defined
+      - name: Dunst D-Bus manager
+        dnf:
+          name: "dunst"
+          state: latest
+      when: stumpwm == False
+    #-------------------------------------------------------
+
+    # Block to remove StumpWM ------------------------------
+    - name: Remove StumpWM
+      block:
+      - name: Dunst D-Bus manager
+        dnf:
+          name: "dunst"
+          state: absent
+      - name: Remove StumpWM
+        include_role:
+          name: stumpwm
+          tasks_from: remove.yml
+      - name: Remove Common lisp SBCL implementation
+        dnf:
+          name: "sbcl"
+          state: absent
+        when: "common-lisp not in profiles"
+      - name: Ensure QuickLisp is removed from builder user home directory
+        include_role:
+          name: quicklisp
+          tasks_from: remove.yml
+        vars:
+          working_directory: "{{ git_3rdparty }}/{{ applications.common_lisp.ql_repo_dir }}"
+        when: "common-lisp not in profiles"
+      when: stumpwm == False
+    #-------------------------------------------------------

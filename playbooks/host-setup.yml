@@ -9,12 +9,12 @@
         tasks_from: init.yml
     - name: Manage fedora based packages
       block:
-        - name: Enable package manager's extra repositories
+        - name: Enable package manager's extra repositories for workstations
           include_role:
             name: workstation
             tasks_from: fedora-workstation-repos.yml
           when: "'workstations' in group_names"
-        - name: Enable package manager's extra repositories
+        - name: Enable package manager's extra repositories for servers
           include_role:
             name: server
             tasks_from: fedora-server-repos.yml
@@ -29,6 +29,16 @@
             state: latest
           loop:
             - git
+        - name: Install applications from package manager for Workstations
+          include_role:
+            name: workstation
+            tasks_from: fedora-workstation-pkg.yml
+          when: "'workstations' in group_names"
+        - name: Install applications from package manager for Servers
+          include_role:
+            name: server
+            tasks_from: fedora-server-pkg.yml
+          when: "'servers' in group_names"
         - name: Setup root user
           include_role:
             name: common
@@ -42,20 +52,10 @@
             name: workstation
             tasks_from: desk-env.yml
           when: "'workstations' in group_names"
-        - name: Install applications from package manager
-          include_role:
-            name: workstation
-            tasks_from: manage-fedora-workstation-pkg.yml
-          when: "'workstations' in group_names"
-        - name: Install applications from package manager for Server installation
-          include_role:
-            name: server
-            tasks_from: manage-fedora-server-pkg.yml
-          when: "'servers' in group_names"
       when: ansible_facts['distribution'] == 'Fedora' and (ansible_facts['distribution_major_version'] | int) > 30
     - name: Manage centos based packages
       block:
-        - name: Enable package manager's extra repositories
+        - name: Enable package manager's extra repositories for servers
           include_role:
             name: enable-pm-repos
             tasks_from: centos-server-repos.yml
@@ -67,6 +67,6 @@
         - name: Install applications from package manager
           include_role:
             name: common
-            tasks_from: manage-centos-server-pkg.yml
+            tasks_from: centos-server-pkg.yml
           when: "'servers' in group_names"
       when: ansible_facts['distribution'] == 'CentOS' and (ansible_facts['distribution_major_version'] | int) >= 8

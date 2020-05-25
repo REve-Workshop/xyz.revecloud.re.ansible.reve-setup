@@ -3,3 +3,16 @@
     repo: "https://github.com/zsh-users/antigen.git"
     dest: "{{ git_3rdparty }}/antigen"
     version: 'HEAD'
+- name: Extra Fonts
+  block:
+  - name: Create the local fonts directory
+    file:
+      path: /usr/local/share/fonts
+      state: directory
+  - name: Install the Nerd Fonts - Dejavu Sans Mono
+    unarchive:
+      src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DejaVuSansMono.zip
+      dest: /usr/local/share/fonts
+      remote_src: yes
+  - name: Rebuild the font cache
+    shell: fc-cache -f -v

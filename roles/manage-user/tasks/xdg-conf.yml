@@ -1,3 +1,6 @@
+- name: Include common variables
+  include_vars:
+    file: ../../common/vars/main.yml
 - name: "Configuration processing"
   block:
     - name: "Checkout lastest version of configuration repository for {{ user_conf['key'] }}"

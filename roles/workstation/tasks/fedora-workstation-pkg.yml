@@ -1,7 +1,7 @@
 - name: Common packages for any Fedora installation
   include_role:
     name: common
-    tasks_from: manage-fedora-common-pkg.yml
+    tasks_from: fedora-common-pkg.yml
 - name: openvpn client and network manager plugins for openvpn
   dnf:
     name: "{{ item }}"

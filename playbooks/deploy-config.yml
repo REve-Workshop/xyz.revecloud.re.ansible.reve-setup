@@ -8,11 +8,12 @@
         name: user_data
     - name: Update configuration repositories and deploy XDG compliant configuration elements
       include_role:
-        name: common
-        tasks_from: manage-cfg.yml
+        name: manage-user
+        tasks_from: xdg-conf.yml
       loop: "{{ user_data['configurations']|dict2items }}"
       loop_control:
         loop_var: user_conf
     - name: Deploy non XDG compliant configuration elements
       include_role:
-        name: user-configuration
+        name: manage-user
+        tasks_from: non-xdg-conf.yml

@@ -62,8 +62,8 @@
     - python3-pip
     - python3-virtualenv
   when: 
-    - "development" in user_data.profiles
-    - "python" in user_data.profiles
+    - development in user_data.profiles
+    - python in user_data.profiles
 - name: Git repositories management
   dnf:
     name: "{{ item }}"
@@ -79,7 +79,7 @@
   dnf:
     name: "sbcl"
     state: latest
-  when: "common-lisp" in user_data.profiles
+  when: '"common-lisp" in user_data.profiles'
 - name: TMux
   dnf:
     name: "{{ item }}"
@@ -96,4 +96,4 @@
     name: "ranger"
     state: latest
 - name: Deploy 3rd party applications common to any hosts
-  include_task: common-3rdparty.yml
+  include_tasks: common-3rdparty.yml
